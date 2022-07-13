@@ -1,50 +1,45 @@
 import {Product} from "./Product";
-
-const products = [
-    {
-        id: 1,
-        title: "Producto 1",
-        description: "Descripción del producto 1",
-        price: "$100",
-        img: "https://picsum.photos/200/300"
-    },
-    {
-        id: 2,
-        title: "Producto 2",
-        description: "Descripción del producto 2",
-        price: "$200",
-        img: "https://picsum.photos/200/300"
-    },
-    {
-        id: 3,
-        title: "Producto 3",
-        description: "Descripción del producto 3",
-        price: "$300",
-        img: "https://picsum.photos/200/300"
-    },
-    {
-        id: 4,
-        title: "Producto 4",
-        description: "Descripción del producto 4",
-        price: "$400",
-        img: "https://picsum.photos/200/300"
-    },
-    {
-        id: 5,
-        title: "Producto 5",
-        description: "Descripción del producto 5",
-        price: "$500",
-        img: "https://picsum.photos/200/300"
-    }
-];
+import {Navbar} from "../commons/Navbar";
+import {useEffect, useState} from "react";
+import {FormProduct} from "./FormProduct";
+import {db} from "../../environments/firebase";
+import {collection, getDocs} from "@firebase/firestore";
 
 export const ProductList = () => {
+    const [products, setProducts] = useState();
+    const productsCollectionRef = collection(db, "products");
+
+    const addOrEdit = (product) => {
+        console.log(product);
+    }
+
+    useEffect(() => {
+        const getProducts = async () => {
+            const products = await getDocs(productsCollectionRef);
+            setProducts(products.docs.map(doc => ({...doc.data(), id: doc.id})));
+        }
+        getProducts();
+    }, []);
+
+
     return (
-        <div className="flex flex-row flex-wrap gap-10">
-            {products.map(product => (
-                <Product key={product.id} {...product} />
-            ))}
-        </div>
+        <>
+            <Navbar />
+            <div className="grid grid-cols-3">
+                <div className="w-full bg-gray-200 h-screen">
+                    <FormProduct addOrEdit={addOrEdit} />
+                </div>
+                <div className="col-span-2">
+                    <div className="flex flex-row flex-wrap gap-10 mt-5 md:mt-0">
+                        {products ? products.map(product => (
+                            <Product key={product.id} {...product} />
+                        )) : <h1 className="text-xl w-full text-center font-bold">No hay productos</h1>}
+                    </div>
+                </div>
+            </div>
+
+        </>
+
     );
 };
 

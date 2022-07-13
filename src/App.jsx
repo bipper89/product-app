@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Routes,
   Route,
@@ -7,17 +6,30 @@ import './App.css'
 import {Login} from "./components/auth/Login";
 import {FormProduct} from "./components/products/FormProduct";
 import {ProductList} from "./components/products/ProductList";
+import {AuthProvider} from "./context/authContext";
+import {Register} from "./components/auth/Register";
+import {ProtectedRoute} from "./services/route-guards";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/new-product" element={<FormProduct />} />
-        <Route path="/products" element={<ProductList />} />
-      </Routes>
-  )
+      <AuthProvider>
+          <Routes>
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/register" element={<Register />} />
+              <Route path="/new-product" element={
+                      <ProtectedRoute>
+                        <FormProduct />
+                      </ProtectedRoute>
+                  }
+              />
+              <Route path="/" element={
+                  <ProtectedRoute>
+                      <ProductList />
+                  </ProtectedRoute>
+                  } />
+          </Routes>
+      </AuthProvider>
+  );
 }
 
 export default App
