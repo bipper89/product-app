@@ -1,5 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import Swal from "sweetalert2";
 
 export const Product = ({id, titulo, descripcion, precio, imagen, onDelete}) => {
     const navigate = useNavigate();
@@ -20,6 +21,12 @@ export const Product = ({id, titulo, descripcion, precio, imagen, onDelete}) => 
         let soldProducts = JSON.parse(localStorage.getItem("soldProducts")) || [];
         soldProducts = [...soldProducts, product];
         localStorage.setItem("soldProducts", JSON.stringify(soldProducts));
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Acceso exitoso',
+            text: 'Producto Agregado Exitosamente',
+        });
     }
 
     return (
