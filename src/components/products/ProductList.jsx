@@ -2,7 +2,7 @@ import {Product} from "./Product";
 import {Navbar} from "../commons/Navbar";
 import {useEffect, useState} from "react";
 import {db} from "../../environments/firebase";
-import {collection, getDocs} from "@firebase/firestore";
+import {collection, deleteDoc, getDocs, doc} from "@firebase/firestore";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../commons/Spinner";
 export const ProductList = () => {
@@ -10,6 +10,7 @@ export const ProductList = () => {
     const [load, setLoad] = useState(true);
     const navigate = useNavigate();
     const productsCollectionRef = collection(db, "products");
+
     const getProducts = async () => {
         const products = await getDocs(productsCollectionRef);
         setProducts(products.docs.map(doc => ({...doc.data(), id: doc.id})));
@@ -20,6 +21,10 @@ export const ProductList = () => {
         getProducts();
     }, []);
 
+    const onDelete = async (id) => {
+        await deleteDoc(doc(db, "products", id));
+        setProducts(products.filter(product => product.id !== id));
+    }
 
     return (
         <>
@@ -36,7 +41,7 @@ export const ProductList = () => {
                         <Spinner/>
                     </>
                     :products ? products.map(product => (
-                    <Product key={product.id} {...product} />
+                    <Product onDelete={onDelete} key={product.id} {...product} />
                 )) : <h1 className="text-xl w-full text-center font-bold">No hay productos</h1>}
             </div>
         </>

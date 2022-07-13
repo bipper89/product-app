@@ -4,7 +4,7 @@ import {auth} from "../environments/firebase";
 
 
 export const authContext = createContext();
-
+const localUser = JSON.parse(sessionStorage.getItem('user'));
 export const useAuth = () => {
     const context = useContext(authContext);
     if (!context) throw new Error("useAuth must be used within an AuthProvider");
@@ -13,7 +13,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({children}) => {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({localUser});
 
     const signUp = async (email, password) => {
         await createUserWithEmailAndPassword(auth, email, password);
@@ -28,20 +28,15 @@ export const AuthProvider = ({children}) => {
         sessionStorage.removeItem('user');
     }
 
-    const userLocal = sessionStorage.getItem('user');
+
 
     useEffect(() => {
-        if (userLocal) {
-            console.log(userLocal);
-            setUser(userLocal)
-        } else {
-            onAuthStateChanged(auth, currentUser => {
-                setUser(currentUser);
-                sessionStorage.setItem('user', JSON.stringify(currentUser));
-            });
-        }
+        onAuthStateChanged(auth, currentUser => {
+            setUser(currentUser);
+            sessionStorage.setItem('user', JSON.stringify(currentUser));
+        });
     }, []);
-    
+
 
     return (
         <authContext.Provider value={{signUp, login, user, logout}}>

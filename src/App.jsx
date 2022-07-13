@@ -8,6 +8,8 @@ import {ProductList} from "./components/products/ProductList";
 import {AuthProvider} from "./context/authContext";
 import {Register} from "./components/auth/Register";
 import {ProtectedRoute} from "./services/route-guards";
+import {EditProduct} from "./components/products/EditProduct";
+import {ShoppingCart} from "./components/products/ShoppingCart";
 
 function App() {
   return (
@@ -23,7 +25,7 @@ function App() {
               />
               <Route path="/product/:id" element={
                   <ProtectedRoute>
-                      <FormProduct />
+                      <EditProduct />
                   </ProtectedRoute>
               }
               />
@@ -32,6 +34,11 @@ function App() {
                       <ProductList />
                   </ProtectedRoute>
                   } />
+              <Route path="/shopping-cart" element={
+                  <ProtectedRoute>
+                      <ShoppingCart />
+                  </ProtectedRoute>
+              } />
           </Routes>
       </AuthProvider>
   );
