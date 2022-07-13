@@ -1,24 +1,28 @@
 import {SoldProduct} from "./SoldProduct";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const soldProducts = JSON.parse(localStorage.getItem('soldProducts') || '[]');
-
 export const ShoppingCart = () => {
     const [products, setProducts] = useState(soldProducts);
     const [price, setPrice] = useState(0);
+    const navigate = useNavigate();
     const getPrice = () =>{
         let carrito=JSON.parse(localStorage.getItem('soldProducts') || '[]');
          let precio=0;
-         if(carrito?.length>0){
+         if(carrito?.length>0) {
              for(let i=0;i<carrito?.length;i++){
                  precio+=parseInt(carrito[i].precio)
              }
              setPrice(precio)
-             console.log("ver el precio",precio,price)
-         }else{
+         } else{
              setPrice(0);
          }
 
+     }
+
+     const getSoldProducts = () => {
+        const firebaseSoldProducts = getDocs(collection(db, 'soldProducts'));
      }
      const  updateProducts=(identificador)=>{
        let prod= products.filter((x)=>x.id!==identificador);
@@ -27,7 +31,8 @@ export const ShoppingCart = () => {
        getPrice();
      }
     useEffect(()=>{
-        getPrice()
+        getPrice();
+        setProducts(JSON.parse(localStorage.getItem('soldProducts') || '[]'));
         }, []
     )
     return (
@@ -36,13 +41,13 @@ export const ShoppingCart = () => {
                 <>
                     <div className="w-2/4">
                         <h2 className="text-lg font-bold text-center m-4">{products.length} Productos en el carrito de compras</h2>
-                        <div className="h-[90%] overflow-y-scroll">
+                        <div className="h-[70%] overflow-y-scroll">
                             {products.map(product => (
                                 <SoldProduct key={product.id} {...product} UpdateProducts={updateProducts}/>
                             ))}
                         </div>
                         <div className="flex items-center w-[100%] justify-center m-4">
-                            <button className="w-[40%] h-10 bg-blue-600 rounded-3xl text-white cursor-pointer hover:bg-blue-700 ">Agregar Producto</button>
+                            <button className="w-[40%] h-10 bg-blue-600 rounded-3xl text-white cursor-pointer hover:bg-blue-700" onClick={() => navigate("/")}>Agregar Producto</button>
                         </div>
                     </div>
                     <div className="w-2/4 flex flex-col w-full h-full justify-evenly items-center">
@@ -53,7 +58,6 @@ export const ShoppingCart = () => {
                         </div>
                     </div>
                 </>
-
                 :
                 <h1 className="flex justify-center items-center w-full h-full text-3xl">No hay productos en el carrito</h1>
             }

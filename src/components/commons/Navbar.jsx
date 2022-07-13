@@ -22,7 +22,7 @@ export const Navbar = () => {
             <h1 className="text-center text-white text-4xl">Productos</h1>
             <div className="flex flex-row gap-4">
                 <p className="p-2 text-white text-2xl">{user?.email}</p>
-                <button className="rounded-full w-12 text-white bg-orange-400 hover:bg-gray-200 hover:text-orange-400" onClick={() => navigate("/shopping-cart")}>
+                <button className="bg-orange-500 text-white w-[50px] rounded-full hover:bg-gray-300 hover:text-orange-500" onClick={() => navigate("/shopping-cart")}>
                     <i className="material-icons p-2">add_shopping_cart</i>
                 </button>
                 {user && (<button className="text-white bg-gray-500 px-5 rounded-md hover:bg-gray-400 hover:text-gray-800" onClick={onLogout}>Logout</button>)}

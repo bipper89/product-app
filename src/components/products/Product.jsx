@@ -1,6 +1,10 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import Swal from "sweetalert2";
+import {doc, addDoc} from "@firebase/firestore";
+import {db} from "../../environments/firebase";
+
+const {uid} = JSON.parse(sessionStorage.getItem('user'));
 
 export const Product = ({id, titulo, descripcion, precio, imagen, onDelete}) => {
     const navigate = useNavigate();
@@ -17,11 +21,10 @@ export const Product = ({id, titulo, descripcion, precio, imagen, onDelete}) => 
         await onDelete(id);
     }
 
-    const onAddShoppingCart = () => {
+    const onAddShoppingCart = async() => {
         let soldProducts = JSON.parse(localStorage.getItem("soldProducts")) || [];
         soldProducts = [...soldProducts, product];
         localStorage.setItem("soldProducts", JSON.stringify(soldProducts));
-
         Swal.fire({
             icon: 'success',
             title: 'Producto agregado al carrito',
