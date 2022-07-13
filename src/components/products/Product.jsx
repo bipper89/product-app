@@ -24,8 +24,8 @@ export const Product = ({id, titulo, descripcion, precio, imagen, onDelete}) => 
 
         Swal.fire({
             icon: 'success',
-            title: 'Acceso exitoso',
-            text: 'Producto Agregado Exitosamente',
+            title: 'Producto agregado al carrito',
+            text: 'Producto agregado exitosamente',
         });
     }
 
