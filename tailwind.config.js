@@ -5,7 +5,11 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation:{
+        'animate-spin':'spin 3s linear infinite'
+      }
+    },
   },
   plugins: [],
 }

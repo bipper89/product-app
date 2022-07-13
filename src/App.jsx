@@ -2,7 +2,6 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import './App.css'
 import {Login} from "./components/auth/Login";
 import {FormProduct} from "./components/products/FormProduct";
 import {ProductList} from "./components/products/ProductList";
@@ -21,6 +20,12 @@ function App() {
                         <FormProduct />
                       </ProtectedRoute>
                   }
+              />
+              <Route path="/product/:id" element={
+                  <ProtectedRoute>
+                      <FormProduct />
+                  </ProtectedRoute>
+              }
               />
               <Route path="/" element={
                   <ProtectedRoute>

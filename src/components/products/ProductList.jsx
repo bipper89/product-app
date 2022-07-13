@@ -1,23 +1,22 @@
 import {Product} from "./Product";
 import {Navbar} from "../commons/Navbar";
 import {useEffect, useState} from "react";
-import {FormProduct} from "./FormProduct";
 import {db} from "../../environments/firebase";
 import {collection, getDocs} from "@firebase/firestore";
-
+import {useNavigate} from "react-router-dom";
+import Spinner from "../commons/Spinner";
 export const ProductList = () => {
     const [products, setProducts] = useState();
+    const [load, setLoad] = useState(true);
+    const navigate = useNavigate();
     const productsCollectionRef = collection(db, "products");
-
-    const addOrEdit = (product) => {
-        console.log(product);
+    const getProducts = async () => {
+        const products = await getDocs(productsCollectionRef);
+        setProducts(products.docs.map(doc => ({...doc.data(), id: doc.id})));
+        setLoad(false);
     }
 
     useEffect(() => {
-        const getProducts = async () => {
-            const products = await getDocs(productsCollectionRef);
-            setProducts(products.docs.map(doc => ({...doc.data(), id: doc.id})));
-        }
         getProducts();
     }, []);
 
@@ -25,19 +24,21 @@ export const ProductList = () => {
     return (
         <>
             <Navbar />
-            <div className="grid grid-cols-3">
-                <div className="w-full bg-gray-200 h-screen">
-                    <FormProduct addOrEdit={addOrEdit} />
+            <div className="flex flex-row flex-wrap gap-10 mt-5 md:mt-0">
+                <div className="mt-4 w-full grid place-content-end mx-10">
+                    <button onClick={() => navigate("/new-product")} className="bg-amber-400 p-4 flex flex-row rounded-md shadow-xl font-bold">
+                        <i className="material-icons">add</i>
+                        Nuevo producto
+                    </button>
                 </div>
-                <div className="col-span-2">
-                    <div className="flex flex-row flex-wrap gap-10 mt-5 md:mt-0">
-                        {products ? products.map(product => (
-                            <Product key={product.id} {...product} />
-                        )) : <h1 className="text-xl w-full text-center font-bold">No hay productos</h1>}
-                    </div>
-                </div>
+                {load ?
+                    <>
+                        <Spinner/>
+                    </>
+                    :products ? products.map(product => (
+                    <Product key={product.id} {...product} />
+                )) : <h1 className="text-xl w-full text-center font-bold">No hay productos</h1>}
             </div>
-
         </>
 
     );

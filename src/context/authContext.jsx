@@ -25,12 +25,21 @@ export const AuthProvider = ({children}) => {
 
     const logout = async () => {
         await signOut(auth);
+        sessionStorage.removeItem('user');
     }
 
+    const userLocal = sessionStorage.getItem('user');
+
     useEffect(() => {
-        onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser);
-        });
+        if (userLocal) {
+            console.log(userLocal);
+            setUser(userLocal)
+        } else {
+            onAuthStateChanged(auth, currentUser => {
+                setUser(currentUser);
+                sessionStorage.setItem('user', JSON.stringify(currentUser));
+            });
+        }
     }, []);
     
 
