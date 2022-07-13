@@ -53,7 +53,9 @@ export const Login = () => {
                         Ingresar
                     </button>
                 </form>
+                <p className="mt-5 text-center">Registrate <span onClick={() => navigate("/auth/register")} className="underline hover:cursor-pointer hover:text-blue-400"> aqui</span></p>
             </div>
+
         </div>
     );
 };
